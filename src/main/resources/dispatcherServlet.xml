@@ -18,25 +18,55 @@
 	<!-- 访问静态资源 -->
 	<mvc:default-servlet-handler />
 
-	<mvc:annotation-driven />
+	<bean id="dateFormat"  class="java.text.SimpleDateFormat">
+		<constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss" />
+	</bean>
 
-	<!--避免IE执行AJAX时，返回JSON出现下载文件 -->
-	<!-- <bean id="mappingJackson2HttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"> -->
-	<!-- <property name="supportedMediaTypes"> -->
-	<!-- <list> -->
-	<!-- <value>text/html;charset=UTF-8</value> -->
-	<!-- </list> -->
-	<!-- </property> -->
-	<!-- </bean> -->
+	<mvc:annotation-driven>
+		<mvc:message-converters>
+			<bean class="org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>text/xml</value>
+						<value>application/xhtml+xml</value>
+					</list>
+				</property>
+				<property name="objectMapper">
+					<bean class="com.fasterxml.jackson.dataformat.xml.XmlMapper">
+						<property name="dateFormat" ref="dateFormat" />
+					</bean>
+				</property>
+			</bean>
+			<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>application/json;charset=UTF-8</value>
+						<value>text/html;charset=UTF-8</value>
+						<value>text/plain;charset=UTF-8</value>
+					</list>
+				</property>
+				<property name="objectMapper">
+					<bean class="com.fasterxml.jackson.databind.ObjectMapper">
+						<property name="dateFormat" ref="dateFormat" />
+					</bean>
+				</property>
+			</bean>
+		</mvc:message-converters>
 
-	<!-- 启动SpringMVC的注解功能，完成请求和注解POJO的映射 -->
-	<!-- <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter"> -->
-	<!-- <property name="messageConverters"> -->
-	<!-- <list> -->
-	<!-- <ref bean="mappingJackson2HttpMessageConverter" /> JSON转换器 -->
-	<!-- </list> -->
-	<!-- </property> -->
-	<!-- </bean> -->
+		<!-- <mvc:message-converters register-defaults="true"> -->
+		<!-- <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"> -->
+		<!-- <property name="supportedMediaTypes"> -->
+		<!-- <list> -->
+
+		<!-- <value>application/json;charset=UTF-8</value> -->
+		<!-- <value>text/html;charset=UTF-8</value> -->
+		<!-- <value>text/plain;charset=UTF-8</value> -->
+		<!-- </list> -->
+		<!-- </property> -->
+		<!-- <property name="objectMapper"> -->
+
+		<!-- </mvc:message-converters> -->
+	</mvc:annotation-driven>
 
 	<!-- 文件上传配置 -->
 	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">

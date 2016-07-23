@@ -13,7 +13,7 @@ import cn.heweiming.ssh.model.Admin;
 @RequestMapping("/admin")
 public class AdminController {
 
-	@RequestMapping("mgmt")
+	@RequestMapping(value = "mgmt", produces = { MediaType.APPLICATION_XHTML_XML_VALUE })
 	@ResponseBody
 	public Admin mgmt() {
 		Admin admin = new Admin();
@@ -21,7 +21,6 @@ public class AdminController {
 		admin.setUsername("admin");
 		admin.setPassword("123456");
 		admin.setBirthday(new Date());
-		;
 		return admin;
 	}
 
